@@ -1,0 +1,28 @@
+
+
+name: Sync LeetCode
+on:
+  workflow_dispatch:     
+  schedule:
+    - cron: '0 8 * * *'  
+
+# FIX 1: Explicitly grants the runner permission to push code to your repo
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # FIX 2: Bypasses the Node 20 deprecation warning block
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+
+    steps:
+      - name: Sync Solutions
+        uses: joshcai/leetcode-sync@v1.7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          destination-folder: 'solutions'
